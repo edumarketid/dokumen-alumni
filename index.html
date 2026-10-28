@@ -134,7 +134,9 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
   const SUPABASE_URL = 'osppykhtjgtloespzecv.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcHB5a2h0amd0bG9lc3B6ZWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTk3ODcsImV4cCI6MjEwODY3NTc4N30.yVGY4IFFQy1afJIvy2_tD9BKqf9s1AubJoNtK2K9wr8';
   
+  // Inisialisasi Supabase cukup SEKALI di sini saja
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  
   let currentStudent = null;
   let isAdminLoggedIn = false;
 
