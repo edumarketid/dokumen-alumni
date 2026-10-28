@@ -2,13 +2,13 @@
 const SUPABASE_URL = 'https://osppykhtjgtloespzecv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcHB5a2h0amd0bG9lc3B6ZWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTk3ODcsImV4cCI6MjEwODY3NTc4N30.yVGY4IFFQy1afJIvy2_tD9BKqf9s1AubJoNtK2K9wr8';
 
-// Pastikan inisialisasi supabase hanya ada satu di sini
+// Inisialisasi Supabase (Hanya ada 1 baris ini di seluruh file)
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentStudent = null;
 let isAdminLoggedIn = false;
 
-// Utility Hash SHA-256
+// Utility Hash SHA-256 untuk PIN & Password
 async function hashPin(pin) {
   const msgBuffer = new TextEncoder().encode(pin);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -23,9 +23,26 @@ function hideAll() {
   });
 }
 
-function showHome() { hideAll(); document.getElementById('home').classList.remove('hidden'); }
-function showActivation() { hideAll(); document.getElementById('activation').classList.remove('hidden'); document.getElementById('activationResult').innerHTML = ''; document.getElementById('activationNisn').value = ''; }
-function showLogin() { hideAll(); document.getElementById('login').classList.remove('hidden'); document.getElementById('loginMessage').innerHTML = ''; document.getElementById('loginNisn').value = ''; document.getElementById('loginPin').value = ''; }
+function showHome() { 
+  hideAll(); 
+  document.getElementById('home').classList.remove('hidden'); 
+}
+
+function showActivation() { 
+  hideAll(); 
+  document.getElementById('activation').classList.remove('hidden'); 
+  document.getElementById('activationResult').innerHTML = ''; 
+  document.getElementById('activationNisn').value = ''; 
+}
+
+function showLogin() { 
+  hideAll(); 
+  document.getElementById('login').classList.remove('hidden'); 
+  document.getElementById('loginMessage').innerHTML = ''; 
+  document.getElementById('loginNisn').value = ''; 
+  document.getElementById('loginPin').value = ''; 
+}
+
 function toggleAdminLogin() { 
   hideAll(); 
   document.getElementById('adminLogin').classList.remove('hidden'); 
