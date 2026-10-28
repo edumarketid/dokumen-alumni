@@ -17,17 +17,20 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f3f6f9
 h1 { text-align: center; margin: 5px 0 8px; font-size: 25px; }
 .subtitle { text-align: center; color: #777; margin-bottom: 25px; }
 label { display: block; font-weight: bold; margin-top: 15px; margin-bottom: 7px; }
-input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; outline: none; }
-input:focus { border-color: #1565c0; }
+input, select { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; outline: none; background: #fff; }
+input:focus, select:focus { border-color: #1565c0; }
 button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
 .btn-primary { background: #1565c0; color: white; }
 .btn-primary:hover { background: #0d47a1; }
 .btn-secondary { background: #eeeeee; color: #333; }
 .btn-secondary:hover { background: #dddddd; }
+.btn-success { background: #2e7d32; color: white; }
+.btn-success:hover { background: #1b5e20; }
 .message { margin-top: 15px; padding: 13px; border-radius: 10px; background: #f0f2f5; line-height: 1.5; }
-.student-name { text-align: center; font-size: 22px; font-weight: bold; margin: 15px 0 5px; }
-.student-badge { text-align: center; font-size: 14px; color: #555; margin-bottom: 25px; }
-.badge { background: #e3f2fd; color: #1565c0; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 5px; }
+.student-name { text-align: center; font-size: 22px; font-weight: bold; margin: 10px 0 5px; }
+.student-info { text-align: center; margin-bottom: 20px; }
+.badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #e3f2fd; color: #1565c0; margin: 2px; }
+.badge-alumni { background: #e8f5e9; color: #2e7d32; }
 .document { border: 1px solid #ddd; border-radius: 13px; padding: 15px; margin-bottom: 15px; background: #ffffff; }
 .document-title { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
 .document-file { font-size: 13px; color: #777; word-break: break-word; margin-bottom: 10px; }
@@ -43,12 +46,13 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
   <div id="home" class="card">
     <div class="logo">📚</div>
     <h1>Portal Dokumen Siswa & Alumni</h1>
-    <div class="subtitle">Akses dokumen akademik Anda</div>
-    <button class="btn-primary" onclick="showActivation()">AKTIVASI AKUN</button>
-    <button class="btn-secondary" onclick="showLogin()">LOGIN</button>
+    <div class="subtitle">Akses dokumen sekolah Anda</div>
+    <button class="btn-primary" onclick="showActivation()">AKTIVASI AKUN SISWA</button>
+    <button class="btn-secondary" onclick="showLogin()">LOGIN SISWA</button>
+    <button class="btn-success" onclick="showAdminLogin()">LOGIN ADMIN</button>
   </div>
 
-  <!-- AKTIVASI -->
+  <!-- AKTIVASI SISWA -->
   <div id="activation" class="card hidden">
     <h1>Aktivasi Akun</h1>
     <div class="subtitle">Buat PIN untuk akun Anda</div>
@@ -59,9 +63,9 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
     <button class="btn-secondary" onclick="showHome()">KEMBALI</button>
   </div>
 
-  <!-- LOGIN -->
+  <!-- LOGIN SISWA -->
   <div id="login" class="card hidden">
-    <h1>Login</h1>
+    <h1>Login Siswa</h1>
     <div class="subtitle">Masuk untuk melihat dokumen Anda</div>
     <label>NISN</label>
     <input id="loginNisn" type="text" inputmode="numeric" placeholder="Masukkan NISN">
@@ -72,14 +76,54 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
     <button class="btn-secondary" onclick="showHome()">KEMBALI</button>
   </div>
 
-  <!-- DASHBOARD -->
+  <!-- LOGIN ADMIN -->
+  <div id="adminLogin" class="card hidden">
+    <h1>Login Admin</h1>
+    <div class="subtitle">Kelola data dan upload dokumen</div>
+    <label>Username</label>
+    <input id="adminUser" type="text" placeholder="Username (admin)" value="admin">
+    <label>Password</label>
+    <input id="adminPass" type="password" placeholder="Password (default: 123450)">
+    <button class="btn-success" onclick="doAdminLogin()">MASUK ADMIN</button>
+    <div id="adminLoginMessage"></div>
+    <button class="btn-secondary" onclick="showHome()">KEMBALI</button>
+  </div>
+
+  <!-- DASHBOARD SISWA -->
   <div id="dashboard" class="card hidden">
     <div class="logo">📂</div>
     <h1>Dokumen Saya</h1>
     <div id="studentName" class="student-name"></div>
-    <div id="studentBadgeContainer" class="student-badge"></div>
+    <div id="studentMeta" class="student-info"></div>
     <div id="documents"></div>
     <button class="btn-secondary" onclick="doLogout()">KELUAR</button>
+  </div>
+
+  <!-- DASHBOARD ADMIN -->
+  <div id="adminDashboard" class="card hidden">
+    <div class="logo">⚙️</div>
+    <h1>Panel Admin</h1>
+    <div class="subtitle">Upload Dokumen (Siswa / Alumni)</div>
+    
+    <label>Pilih Kategori Folder</label>
+    <select id="uploadCategory">
+      <option value="Ijazah">Ijazah</option>
+      <option value="Transkrip">Transkrip</option>
+      <option value="Sertifikat">Sertifikat</option>
+      <option value="SKHUN">SKHUN</option>
+      <option value="Alumni">Alumni</option>
+    </select>
+
+    <label>NISN Siswa / Alumni (untuk penamaan file)</label>
+    <input id="uploadNisn" type="text" inputmode="numeric" placeholder="Contoh: 0051234567">
+
+    <label>Pilih File Dokumen (PDF/Gambar)</label>
+    <input id="uploadFile" type="file">
+
+    <button class="btn-success" onclick="uploadDocumentByAdmin()">UPLOAD DOKUMEN</button>
+    <div id="uploadMessage"></div>
+
+    <button class="btn-secondary" onclick="doLogout()">KELUAR ADMIN</button>
   </div>
 </div>
 
@@ -87,13 +131,13 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
 
 <script>
   // ================= KONFIGURASI SUPABASE =================
-  const SUPABASE_URL = 'GANTI_DENGAN_SUPABASE_URL_ANDA';
-  const SUPABASE_ANON_KEY = 'GANTI_DENGAN_SUPABASE_ANON_KEY_ANDA';
+  const SUPABASE_URL = 'osppykhtjgtloespzecv.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcHB5a2h0amd0bG9lc3B6ZWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTk3ODcsImV4cCI6MjEwODY3NTc4N30.yVGY4IFFQy1afJIvy2_tD9BKqf9s1AubJoNtK2K9wr8';
   
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   let currentStudent = null;
+  let isAdminLoggedIn = false;
 
-  // Utility Hash SHA-256 untuk PIN
   async function hashPin(pin) {
     const msgBuffer = new TextEncoder().encode(pin);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -102,7 +146,7 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
   }
 
   function hideAll() {
-    ['home', 'activation', 'login', 'dashboard'].forEach(id => {
+    ['home', 'activation', 'login', 'adminLogin', 'dashboard', 'adminDashboard'].forEach(id => {
       document.getElementById(id).classList.add('hidden');
     });
   }
@@ -110,6 +154,7 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
   function showHome() { hideAll(); document.getElementById('home').classList.remove('hidden'); }
   function showActivation() { hideAll(); document.getElementById('activation').classList.remove('hidden'); }
   function showLogin() { hideAll(); document.getElementById('login').classList.remove('hidden'); }
+  function showAdminLogin() { hideAll(); document.getElementById('adminLogin').classList.remove('hidden'); }
 
   // CEK NISN AKTIVASI
   async function checkNisn() {
@@ -159,7 +204,6 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
     }).eq('nisn', nisn);
 
     hideLoadingMessage();
-
     if (error) { alert('Gagal mengaktifkan akun: ' + error.message); return; }
 
     alert('Aktivasi berhasil. Silakan login menggunakan NISN dan PIN.');
@@ -168,7 +212,7 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
     showLogin();
   }
 
-  // LOGIN
+  // LOGIN SISWA
   async function doLogin() {
     const nisn = document.getElementById('loginNisn').value.trim();
     const pin = document.getElementById('loginPin').value.trim();
@@ -192,22 +236,82 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
     }
 
     await supabase.from('siswa').update({ login_at: new Date() }).eq('nisn', nisn);
-
     currentStudent = data;
     loadDashboard();
   }
 
-  // DASHBOARD & LOAD DOKUMEN BERBASIS KATEGORI / FOLDER
+  // LOGIN ADMIN
+  async function doAdminLogin() {
+    const username = document.getElementById('adminUser').value.trim();
+    const pass = document.getElementById('adminPass').value.trim();
+    const message = document.getElementById('adminLoginMessage');
+
+    if (!username || !pass) { message.innerHTML = '<div class="message">Username dan Password wajib diisi.</div>'; return; }
+
+    showLoadingMessage('Memeriksa admin...');
+    const passHash = await hashPin(pass);
+
+    const { data, error } = await supabase.from('admin_config').select('*').eq('username', username).single();
+    hideLoadingMessage();
+
+    if (error || !data || data.password_hash !== passHash) {
+      message.innerHTML = '<div class="message">Username atau Password admin salah.</div>';
+      return;
+    }
+
+    isAdminLoggedIn = true;
+    hideAll();
+    document.getElementById('adminDashboard').classList.remove('hidden');
+  }
+
+  // UPLOAD DOKUMEN OLEH ADMIN KE STORAGE
+  async function uploadDocumentByAdmin() {
+    const category = document.getElementById('uploadCategory').value;
+    const nisn = document.getElementById('uploadNisn').value.trim();
+    const fileInput = document.getElementById('uploadFile');
+    const msg = document.getElementById('uploadMessage');
+
+    if (!nisn || fileInput.files.length === 0) {
+      msg.innerHTML = '<div class="message" style="color:red;">NISN dan File wajib diisi/dipilih.</div>';
+      return;
+    }
+
+    const file = fileInput.files[0];
+    const fileName = `${nisn}_${file.name}`;
+    const filePath = `${category}/${fileName}`;
+
+    showLoadingMessage('Mengunggah dokumen ke Supabase...');
+
+    const { error } = await supabase.storage
+      .from('student-documents')
+      .upload(filePath, file, { upsert: true });
+
+    hideLoadingMessage();
+
+    if (error) {
+      msg.innerHTML = `<div class="message" style="color:red;">Gagal upload: ${error.message}</div>`;
+    } else {
+      msg.innerHTML = `<div class="message" style="color:green;">Berhasil mengunggah dokumen ke folder ${category}!</div>`;
+      fileInput.value = '';
+      document.getElementById('uploadNisn').value = '';
+    }
+  }
+
+  // DASHBOARD & LOAD DOKUMEN SISWA
   async function loadDashboard() {
     hideAll();
     document.getElementById('dashboard').classList.remove('hidden');
     document.getElementById('studentName').textContent = currentStudent.nama;
-    
-    // Tampilkan Badge Status (Siswa / Alumni beserta Angkatan jika ada)
-    const tipe = currentStudent.tipe_pengguna || 'Siswa Aktif';
-    const angkatan = currentStudent.angkatan ? ` • Angkatan ${currentStudent.angkatan}` : '';
-    document.getElementById('studentBadgeContainer').innerHTML = `<span class="badge">${tipe}${angkatan}</span>`;
 
+    let metaHtml = `<span class="badge">NISN: ${currentStudent.nisn}</span>`;
+    if (currentStudent.tipe_pengguna) {
+      const isAlumni = currentStudent.tipe_pengguna.toUpperCase() === 'ALUMNI';
+      metaHtml += ` <span class="badge ${isAlumni ? 'badge-alumni' : ''}">${currentStudent.tipe_pengguna.toUpperCase()}</span>`;
+    }
+    if (currentStudent.angkatan) {
+      metaHtml += ` <span class="badge">Angkatan ${currentStudent.angkatan}</span>`;
+    }
+    document.getElementById('studentMeta').innerHTML = metaHtml;
     document.getElementById('documents').innerHTML = '<div class="loading">Memuat dokumen...</div>';
 
     const { data: categories, error: catError } = await supabase.storage
@@ -215,14 +319,12 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
       .list('', { limit: 100, sortBy: { column: 'name', order: 'asc' } });
 
     const container = document.getElementById('documents');
-
     if (catError || !categories || categories.length === 0) {
       container.innerHTML = '<div class="empty">Dokumen Anda belum tersedia.</div>';
       return;
     }
 
     let allStudentDocuments = [];
-
     for (const cat of categories) {
       if (!cat.id && cat.name) {
         const categoryName = cat.name;
@@ -236,8 +338,7 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
               allStudentDocuments.push({
                 jenis: categoryName,
                 namaFile: file.name.replace(currentStudent.nisn + '_', ''),
-                filePath: `${categoryName}/${file.name}`,
-                size: file.metadata?.size || 0
+                filePath: `${categoryName}/${file.name}`
               });
             }
           });
@@ -251,7 +352,6 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
     }
 
     allStudentDocuments.sort((a, b) => a.jenis.localeCompare(b.jenis));
-
     let html = '';
     allStudentDocuments.forEach(doc => {
       html += `
@@ -263,20 +363,12 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
         </div>
       `;
     });
-
     container.innerHTML = html;
   }
 
-  // LIHAT / DOWNLOAD DOKUMEN VIA SIGNED URL
   async function getFileUrl(filePath) {
-    const { data, error } = await supabase.storage
-      .from('student-documents')
-      .createSignedUrl(filePath, 60);
-
-    if (error) {
-      alert('Gagal membuka dokumen.');
-      return null;
-    }
+    const { data, error } = await supabase.storage.from('student-documents').createSignedUrl(filePath, 60);
+    if (error) { alert('Gagal membuka dokumen.'); return null; }
     return data.signedUrl;
   }
 
@@ -303,9 +395,11 @@ button { width: 100%; padding: 14px; margin-top: 14px; border: none; border-radi
 
   function doLogout() {
     currentStudent = null;
+    isAdminLoggedIn = false;
     document.getElementById('loginNisn').value = '';
     document.getElementById('loginPin').value = '';
-    showLogin();
+    document.getElementById('adminPass').value = '';
+    showHome();
   }
 
   function showLoadingMessage(text) {
