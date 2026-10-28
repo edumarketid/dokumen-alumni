@@ -2,6 +2,7 @@
 const SUPABASE_URL = 'https://osppykhtjgtloespzecv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcHB5a2h0amd0bG9lc3B6ZWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTk3ODcsImV4cCI6MjEwODY3NTc4N30.yVGY4IFFQy1afJIvy2_tD9BKqf9s1AubJoNtK2K9wr8';
 
+// Pastikan inisialisasi supabase hanya ada satu di sini
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentStudent = null;
@@ -17,7 +18,8 @@ async function hashPin(pin) {
 
 function hideAll() {
   ['home', 'activation', 'login', 'adminLogin', 'dashboard', 'adminDashboard'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
   });
 }
 
